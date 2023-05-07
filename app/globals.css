@@ -6,3 +6,42 @@ nav {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.14);
   background-color: #fff;
 }
+
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size: 3rem;
+  text-align: center;
+  width: 100%;
+}
+
+.text-shadow {
+  text-shadow: 5px 5px 5px rgba(0, 0, 5);
+}
+
+.text-shadow-sm {
+  text-shadow: 5px 5px 10px rgb(10, 10, 10);
+}
+
+.image-brightness-wrapper {
+  filter: contrast(50%);
+  filter: brightness(80%);
+}
+
+.shadow-lg {
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
