@@ -27,7 +27,7 @@
   width: 100%;
   visibility: hidden;
   border-radius: 8px;
-  background: rgb(67, 67, 67);
+  background: #434343;
   transition: 0.2s;
 
   opacity: 0;

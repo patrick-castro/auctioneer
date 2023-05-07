@@ -1,0 +1,14 @@
+.btn-filters {
+  background-color: transparent;
+  border: 1px solid #b5b5b5;
+  color: #434343;
+  padding: 6px 15px;
+  border-radius: 25px;
+  font-weight: 500;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.selected-btn {
+  color: white;
+  background-color: #434343;
+}
