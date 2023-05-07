@@ -21,7 +21,7 @@ export default function Auction() {
   }
 
   return (
-    <main className='mx-8 sm:mx-24'>
+    <main className='mx-8 sm:mx-60'>
       {/* Create a dedicated component for filter */}
       <div className='flex items-baseline gap-2'>
         <span className='flex items-center gap-2'>
@@ -55,6 +55,51 @@ export default function Auction() {
           </button>
         </div>
       </div>
+
+      <section className='mt-8'>
+        <table className='table-auto w-full'>
+          <thead>
+            <tr>
+              <th className='w-2/5 px-4 py-2'>Name</th>
+              <th className='w-1/5 px-4 py-2'>Current Price</th>
+              <th className='w-1/5 px-4 py-2'>Duration</th>
+              <th className='w-1/5 px-4 py-2'>Bid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className='bg-gray-100'>
+              <td className='border px-4 py-2'>Item 1</td>
+              <td className='border px-4 py-2 text-center'>$10.00</td>
+              <td className='border px-4 py-2 text-center'>2 days</td>
+              <td className='border px-4 py-2 text-center'>
+                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded'>
+                  Bid
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className='border px-4 py-2'>Item 2</td>
+              <td className='border px-4 py-2 text-center'>$15.00</td>
+              <td className='border px-4 py-2 text-center'>1 day</td>
+              <td className='border px-4 py-2 text-center'>
+                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded'>
+                  Bid
+                </button>
+              </td>
+            </tr>
+            <tr className='bg-gray-100'>
+              <td className='border px-4 py-2'>Item 3</td>
+              <td className='border px-4 py-2 text-center'>$20.00</td>
+              <td className='border px-4 py-2 text-center'>3 days</td>
+              <td className='border px-4 py-2 text-center'>
+                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded'>
+                  Bid
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   )
 }
