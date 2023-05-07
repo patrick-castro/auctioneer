@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 nav {
-  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.14);
   background-color: #fff;
 }
