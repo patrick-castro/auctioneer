@@ -14,7 +14,7 @@ enum FilterOption {
 }
 
 export default function Auction() {
-  const [filter, setFilter] = useState<Filter>('ALL')
+  const [filter, setFilter] = useState<Filter>(FilterOption.All)
 
   const handleSelectFilter = (option: Filter) => {
     setFilter(option)
