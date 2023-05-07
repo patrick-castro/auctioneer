@@ -28,7 +28,7 @@
   visibility: hidden;
   border-radius: 8px;
   background: #434343;
-  transition: 0.2s;
+  transition: 0.25s;
 
   opacity: 0;
   transform-origin: 100% 0%;
@@ -57,7 +57,7 @@
 
 .chevron {
   margin-left: auto;
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
 .dropdown.open .chevron {

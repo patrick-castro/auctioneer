@@ -11,6 +11,7 @@ export default function Navbar() {
         <FcDonate className='text-3xl' />
         <h1 className='text-2xl font-semibold'>Auctioneer</h1>
       </Link>
+      {/* TODO: Remove Dropdown if user is not yet logged in */}
       <Dropdown />
     </nav>
   )

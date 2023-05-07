@@ -21,6 +21,7 @@ export default function Home() {
           <p className='text-2xl pl-1 font-normal pb-2 text-white text-shadow-sm'>
             Experience the thrill of Auctioneer.
           </p>
+          {/* TODO: Remove buttons if user is logged in */}
           <div className='flex gap-5 mt-4'>
             <Link
               href='/login'
