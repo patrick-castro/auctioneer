@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -21,12 +22,18 @@ export default function Home() {
             Experience the thrill of Auctioneer.
           </p>
           <div className='flex gap-5 mt-4'>
-            <button className='w-40 py-5 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold text-white shadow-lg'>
+            <Link
+              href='/login'
+              className='w-40 py-5 text-center bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold text-white shadow-lg'
+            >
               Login
-            </button>
-            <button className='w-40 py-5 bg-white outline outline-2 outline-indigo-500 rounded-lg font-bold text-indigo-600 hover:text-white hover:bg-indigo-500 shadow-lg'>
+            </Link>
+            <Link
+              href='/register'
+              className='w-40 py-5 text-center bg-white outline outline-2 outline-indigo-500 rounded-lg font-bold text-indigo-600 hover:text-white hover:bg-indigo-500 shadow-lg'
+            >
               Register
-            </button>
+            </Link>
           </div>
         </div>
       </div>
