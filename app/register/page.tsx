@@ -14,7 +14,7 @@ export default function Register() {
           </p>
           <input
             type='email'
-            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
+            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
             name='email'
           />
         </div>
@@ -25,7 +25,7 @@ export default function Register() {
           </p>
           <input
             type='password'
-            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
+            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
             name='password'
           />
         </div>
