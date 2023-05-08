@@ -21,7 +21,7 @@ export default function Auction() {
   }
 
   return (
-    <main className='mx-8 sm:mx-60'>
+    <main className='mx-8 sm:mx-60 mt-2'>
       {/* Create a dedicated component for filter */}
       <div className='flex items-baseline gap-2'>
         <span className='flex items-center gap-2'>

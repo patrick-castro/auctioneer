@@ -12,6 +12,7 @@
     "@types/node": "20.1.0",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
+    "accounting": "^0.4.1",
     "autoprefixer": "10.4.14",
     "classnames": "^2.3.2",
     "eslint": "8.40.0",
@@ -23,5 +24,10 @@
     "react-icons": "^4.8.0",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/accounting": "^0.4.2",
+    "i": "^0.3.7",
+    "npm": "^9.6.6"
   }
 }
