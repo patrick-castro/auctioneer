@@ -72,7 +72,7 @@ export default function Auction() {
               <td className='border px-4 py-2 text-center'>$10.00</td>
               <td className='border px-4 py-2 text-center'>2 days</td>
               <td className='border px-4 py-2 text-center'>
-                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded'>
+                <button className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded'>
                   Bid
                 </button>
               </td>
@@ -82,7 +82,7 @@ export default function Auction() {
               <td className='border px-4 py-2 text-center'>$15.00</td>
               <td className='border px-4 py-2 text-center'>1 day</td>
               <td className='border px-4 py-2 text-center'>
-                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded'>
+                <button className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded'>
                   Bid
                 </button>
               </td>
@@ -92,7 +92,7 @@ export default function Auction() {
               <td className='border px-4 py-2 text-center'>$20.00</td>
               <td className='border px-4 py-2 text-center'>3 days</td>
               <td className='border px-4 py-2 text-center'>
-                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded'>
+                <button className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded'>
                   Bid
                 </button>
               </td>
