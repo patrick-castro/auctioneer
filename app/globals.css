@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  color: #444444;
+}
+
 nav {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.14);
   background-color: #fff;
@@ -44,4 +48,18 @@ nav {
 
 .shadow-lg {
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
+
+.login-form {
+  position: relative;
+  display: block;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 32rem;
+  margin: auto;
+  margin-top: 1.5rem;
+  padding: 2rem 2rem;
+  box-sizing: border-box;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
