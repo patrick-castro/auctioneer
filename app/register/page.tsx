@@ -1,13 +1,46 @@
+'use client'
+
 import Link from 'next/link'
+import { FormEvent } from 'react'
+import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 
 export default function Register() {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email')
+    const password = formData.get('password')
+
+    const res = await fetch('http://localhost:3000/api/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+
+    const result = await res.json()
+
+    await signIn('credentials', {
+      username: email,
+      password: password,
+      redirect: true,
+      callbackUrl: '/auction',
+    })
+  }
+
   return (
     <div className='login-form'>
       <div className='pb-4'>
         <h1 className='text-2xl font-semibold mb-2'>Register to Auctioneer</h1>
         <p>Winning is just a bid away!</p>
       </div>
-      <form>
+      <form onSubmit={onSubmit}>
         <div className='mt-5'>
           <p className='text-sm font-semibold mb-2 text-gray-500'>
             Email Address<span className='text-red-500 text-sm'>*</span>
