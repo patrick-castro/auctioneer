@@ -1,7 +1,12 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 
 export default function Home() {
+  const { data: session } = useSession()
+
   return (
     <main>
       <div className='w-full'>
@@ -22,20 +27,25 @@ export default function Home() {
             Experience the thrill of Auctioneer.
           </p>
           {/* TODO: Remove buttons if user is logged in */}
-          <div className='flex gap-5 mt-4'>
-            <Link
-              href='/login'
-              className='w-40 py-5 text-center bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold text-white shadow-lg'
-            >
-              Login
-            </Link>
-            <Link
-              href='/register'
-              className='w-40 py-5 text-center bg-white outline outline-2 outline-indigo-500 rounded-lg font-bold text-indigo-600 hover:text-white hover:bg-indigo-500 shadow-lg'
-            >
-              Register
-            </Link>
-          </div>
+
+          {(!session || !session.user) && (
+            <>
+              <div className='flex gap-5 mt-4'>
+                <Link
+                  href='/login'
+                  className='w-40 py-5 text-center bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold text-white shadow-lg'
+                >
+                  Login
+                </Link>
+                <Link
+                  href='/register'
+                  className='w-40 py-5 text-center bg-white outline outline-2 outline-indigo-500 rounded-lg font-bold text-indigo-600 hover:text-white hover:bg-indigo-500 shadow-lg'
+                >
+                  Register
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </main>
