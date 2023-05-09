@@ -1,23 +1,38 @@
 'use client'
 import { IoFilter } from 'react-icons/io5'
 import cn from 'classnames'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import './styles.css'
 
-type Filter = 'ALL' | 'ONGOING' | 'COMPLETED'
+type Filter = 'all' | 'ongoing' | 'completed'
 
 enum FilterOption {
-  All = 'ALL',
-  Ongoing = 'ONGOING',
-  Completed = 'COMPLETED',
+  All = 'all',
+  Ongoing = 'ongoing',
+  Completed = 'completed',
 }
+
+const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
 
 export default function Auction() {
   const [filter, setFilter] = useState<Filter>(FilterOption.All)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const searchFilter = searchParams.get('filter')
+    if (!searchFilter || !ALLOWED_FILTERS.includes(searchFilter)) {
+      router.replace('auction?filter=all')
+    } else {
+      setFilter(searchFilter as Filter)
+    }
+  }, [])
 
   const handleSelectFilter = (option: Filter) => {
     setFilter(option)
+    router.replace(`auction?filter=${option}`)
   }
 
   return (
