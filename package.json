@@ -19,6 +19,7 @@
     "classnames": "^2.3.2",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
+    "jsonwebtoken": "^9.0.0",
     "next": "13.4.1",
     "next-auth": "^4.22.1",
     "postcss": "8.4.23",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@types/accounting": "^0.4.2",
     "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.2",
     "i": "^0.3.7",
     "npm": "^9.6.6",
     "prisma": "^4.13.0"
