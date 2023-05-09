@@ -3,9 +3,10 @@ import { RiAccountCircleLine, RiAuctionLine } from 'react-icons/ri'
 import { GoChevronDown, GoX } from 'react-icons/go'
 import { MdLocalAtm } from 'react-icons/md'
 import { TbLogout } from 'react-icons/tb'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 
 import './styles.css'
+import Link from 'next/link'
 
 type IconProps = {
   children: ReactNode
@@ -65,15 +66,15 @@ export const Dropdown = () => {
         className={`menu ${isOpen ? 'open' : ''}`}
         style={{ right: menuRight, top: menuTop }}
       >
-        <button>
+        <Link href='/auction/new' className='redirect-btn'>
           <RiAuctionLine />
           <span>Create Auction</span>
-        </button>
-        <button>
+        </Link>
+        <Link href='/deposit/new' className='redirect-btn'>
           <MdLocalAtm />
           <span>Deposit</span>
-        </button>
-        <button>
+        </Link>
+        <button onClick={() => signOut()}>
           <TbLogout />
           <span>Logout</span>
         </button>
