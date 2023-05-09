@@ -3,6 +3,7 @@ import { RiAccountCircleLine, RiAuctionLine } from 'react-icons/ri'
 import { GoChevronDown, GoX } from 'react-icons/go'
 import { MdLocalAtm } from 'react-icons/md'
 import { TbLogout } from 'react-icons/tb'
+import { useSession } from 'next-auth/react'
 
 import './styles.css'
 
@@ -28,6 +29,9 @@ export const Dropdown = () => {
   const [menuTop, setMenuTop] = useState<string>()
   const [menuRight, setMenuRight] = useState<string>()
 
+  const { data: session } = useSession()
+  const { user } = session || {}
+
   const handleClick = () => {
     const buttonRect = buttonRef?.current?.getBoundingClientRect()
     const chevronRect = chevronRef?.current?.getBoundingClientRect()
@@ -47,11 +51,16 @@ export const Dropdown = () => {
 
   return (
     <div className={`dropdown ${isOpen ? 'open' : ''}`}>
-      <button ref={buttonRef} onClick={handleClick} className='justify-end'>
-        <RiAccountCircleLine className='text-xl' />
-        <span>pat@gmail.com</span>
-        <span className='chevron'>{isOpen ? <GoX /> : <GoChevronDown />}</span>
-      </button>
+      {!!user && (
+        <button ref={buttonRef} onClick={handleClick} className='justify-end'>
+          <RiAccountCircleLine className='text-xl' />
+          <span>{user.email}</span>
+          <span className='chevron'>
+            {isOpen ? <GoX /> : <GoChevronDown />}
+          </span>
+        </button>
+      )}
+
       <div
         className={`menu ${isOpen ? 'open' : ''}`}
         style={{ right: menuRight, top: menuTop }}
