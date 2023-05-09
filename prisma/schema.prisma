@@ -31,7 +31,7 @@ model Auction {
   timeWindow DateTime
   status     String
 
-  owner   User   @relation(fields: [ownerId], references: [id])
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String
 
   bids Bid[]
@@ -46,9 +46,9 @@ model Bid {
   id    String  @id @default(uuid())
   price Decimal
 
-  bidder    User    @relation(fields: [bidderId], references: [id])
+  bidder    User    @relation(fields: [bidderId], references: [id], onDelete: Cascade)
   bidderId  String
-  auction   Auction @relation(fields: [auctionId], references: [id])
+  auction   Auction @relation(fields: [auctionId], references: [id], onDelete: Cascade)
   auctionId String
 
   createdAt DateTime @default(now())
