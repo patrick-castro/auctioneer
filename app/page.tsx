@@ -22,12 +22,9 @@ export default function Home() {
           <h1 className='text-5xl font-semibold pb-2 text-white text-shadow'>
             Winning is just a bid away.
           </h1>
-
           <p className='text-2xl pl-1 font-normal pb-2 text-white text-shadow-sm'>
             Experience the thrill of Auctioneer.
           </p>
-          {/* TODO: Remove buttons if user is logged in */}
-
           {(!session || !session.user) && (
             <>
               <div className='flex gap-5 mt-4'>

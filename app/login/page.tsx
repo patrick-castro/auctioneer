@@ -1,13 +1,33 @@
+'use client'
+
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { FormEvent, useRef } from 'react'
 
 export default function Login() {
+  const username = useRef('')
+  const password = useRef('')
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const result = await signIn('credentials', {
+      username: username.current,
+      password: password.current,
+      redirect: true,
+      callbackUrl: '/auction',
+    })
+
+    // CHECK IF RESULT IS UNDEFINED
+  }
+
   return (
     <div className='login-form'>
       <div className='pb-4'>
         <h1 className='text-2xl font-semibold mb-2'>Login to Auctioneer</h1>
         <p>Winning is just a bid away!</p>
       </div>
-      <form>
+      <form onSubmit={onSubmit}>
         <div className='mt-5'>
           <p className='text-sm font-semibold mb-2 text-gray-500'>
             Email Address<span className='text-red-500 text-sm'>*</span>
@@ -16,6 +36,7 @@ export default function Login() {
             type='email'
             className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
             name='email'
+            onChange={(e) => (username.current = e.target.value)}
           />
         </div>
 
@@ -27,6 +48,7 @@ export default function Login() {
             type='password'
             className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
             name='password'
+            onChange={(e) => (password.current = e.target.value)}
           />
         </div>
 
