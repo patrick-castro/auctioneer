@@ -1,17 +1,19 @@
-import getAllAuctions from '@/utils/getAllAuctions'
 import accounting from 'accounting'
 import cn from 'classnames'
+import { useSession } from 'next-auth/react'
 
 interface Props {
-  filter: string
-  userId: string
+  data: Auction[]
+  isLoading: boolean
 }
 
-export default async function Auctions({ filter, userId }: Props) {
-  const auctions = await getAllAuctions(filter)
+export default function Auctions({ data, isLoading }: Props) {
+  const { data: session } = useSession()
+
+  const userId = session?.user.id
 
   const renderRows = () => {
-    return auctions.map(
+    return data.map(
       ({ id, name, startPrice, timeWindow, ownerId }: Auction, idx: number) => {
         return (
           <tr className={cn({ 'bg-gray-100': idx % 2 === 0 })} key={id}>
@@ -34,6 +36,25 @@ export default async function Auctions({ filter, userId }: Props) {
           </tr>
         )
       }
+    )
+  }
+
+  const renderLoadingState = () => {
+    return (
+      <tr className='animate-pulse'>
+        <td className='w-2/5 px-4 py-2 bg-gray-100'></td>
+        <td className='w-1/5 px-4 py-2 bg-gray-100'></td>
+        <td className='w-1/5 px-4 py-2 bg-gray-100'></td>
+        <td className='w-1/5 px-4 py-2 bg-gray-100'></td>
+      </tr>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
     )
   }
 

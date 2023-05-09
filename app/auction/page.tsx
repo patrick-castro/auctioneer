@@ -3,10 +3,10 @@ import { IoFilter } from 'react-icons/io5'
 import cn from 'classnames'
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import useSWR from 'swr'
 import Auctions from './components/Auctions'
 
 import './styles.css'
-import { useSession } from 'next-auth/react'
 
 type Filter = 'all' | 'ongoing' | 'completed'
 
@@ -18,11 +18,15 @@ enum FilterOption {
 
 const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
 
+async function fetcher(url: string) {
+  const res = await fetch(url)
+  return await res.json()
+}
+
 export default function Auction() {
   const [filter, setFilter] = useState<Filter>(FilterOption.All)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session } = useSession()
 
   useEffect(() => {
     const searchFilter = searchParams.get('filter')
@@ -32,6 +36,11 @@ export default function Auction() {
       setFilter(searchFilter as Filter)
     }
   }, [])
+
+  const { data, error, isLoading } = useSWR(
+    `http://localhost:3000/api/auction?filter=${filter}`,
+    fetcher
+  )
 
   const handleSelectFilter = (option: Filter) => {
     setFilter(option)
@@ -73,9 +82,7 @@ export default function Auction() {
           </button>
         </div>
       </div>
-
-      {/* @ts-expect-error Async Server Component */}
-      <Auctions filter={filter} userId={session?.user?.id} />
+      <Auctions data={data} isLoading={isLoading} />
     </main>
   )
 }
