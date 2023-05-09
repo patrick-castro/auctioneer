@@ -1,5 +1,9 @@
 import './styles.css'
 
+export const metadata = {
+  title: 'Create New Auction',
+}
+
 export default function NewAuction() {
   return (
     <div className='login-form'>

@@ -1,4 +1,9 @@
+import { Metadata } from 'next'
 import './styles.css'
+
+export const metadata: Metadata = {
+  title: 'Make New Deposit',
+}
 
 export default function NewDeposit() {
   return (
