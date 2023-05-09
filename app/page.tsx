@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
+import { RiAuctionLine } from 'react-icons/ri'
 
 export default function Home() {
   const { data: session } = useSession()
@@ -25,7 +26,7 @@ export default function Home() {
           <p className='text-2xl pl-1 font-normal pb-2 text-white text-shadow-sm'>
             Experience the thrill of Auctioneer.
           </p>
-          {(!session || !session.user) && (
+          {!session || !session.user ? (
             <>
               <div className='flex gap-5 mt-4'>
                 <Link
@@ -42,6 +43,16 @@ export default function Home() {
                 </Link>
               </div>
             </>
+          ) : (
+            <div className='flex gap-5 mt-4'>
+              <Link
+                href='/auction'
+                className='w-72 py-5 text-center bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold text-white shadow-lg flex items-center justify-center gap-2'
+              >
+                Let&apos;s Start Auctioning!
+                <RiAuctionLine className='text-xl' />
+              </Link>
+            </div>
           )}
         </div>
       </div>
