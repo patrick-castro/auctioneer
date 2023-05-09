@@ -10,3 +10,40 @@ datasource db {
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String
+  balance  Decimal
+
+  auctions Auction[]
+  bids     Bid[]
+}
+
+model Auction {
+  id         String   @id @default(uuid())
+  name       String
+  startPrice Decimal
+  timeWindow DateTime
+  status     String
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
+  bids    Bid[]
+
+  @@index([ownerId], name: "owner_idx")
+}
+
+model Bid {
+  id    String  @id @default(uuid())
+  price Decimal
+
+  bidder    User    @relation(fields: [bidderId], references: [id])
+  bidderId  String
+  auction   Auction @relation(fields: [auctionId], references: [id])
+  auctionId String
+
+  @@index([bidderId], name: "bidder_idx")
+  @@index([auctionId], name: "auction_idx")
+}
