@@ -15,10 +15,12 @@
     "@types/react-dom": "18.2.4",
     "accounting": "^0.4.1",
     "autoprefixer": "10.4.14",
+    "bcrypt": "^5.1.0",
     "classnames": "^2.3.2",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
     "next": "13.4.1",
+    "next-auth": "^4.22.1",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@types/accounting": "^0.4.2",
+    "@types/bcrypt": "^5.0.0",
     "i": "^0.3.7",
     "npm": "^9.6.6",
     "prisma": "^4.13.0"
