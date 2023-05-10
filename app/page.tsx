@@ -12,7 +12,7 @@ export default function Home() {
     <main>
       <div className='w-full'>
         <Image
-          src='/images/add-cart.jpeg'
+          src='/images/auction.jpeg'
           alt='Add to cart image'
           priority={true}
           fill={true}
