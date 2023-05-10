@@ -37,9 +37,9 @@ export async function PUT(request: Request) {
     )
   }
 
-  const body: { balance: string } = await request.json()
+  const body: { amount: string } = await request.json()
   const { id: userId, balance } = jwt
-  const totalBalance = parseFloat(balance) + parseFloat(body.balance)
+  const totalBalance = parseFloat(balance) + parseFloat(body.amount)
 
   await prisma.user.update({
     data: {
