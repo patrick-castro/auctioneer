@@ -2,6 +2,7 @@ import accounting from 'accounting'
 import cn from 'classnames'
 import { useSession } from 'next-auth/react'
 import formatTimeDiff from '@/utils/formatTimeDiff'
+import { useEffect, useState } from 'react'
 
 interface Props {
   data: Auction[]
@@ -10,11 +11,28 @@ interface Props {
 
 export default function Auctions({ data, isLoading }: Props) {
   const { data: session } = useSession()
+  const [auctions, setAuctions] = useState<Auction[]>([])
+
+  useEffect(() => {
+    if (!data) return
+
+    const timer = setInterval(() => {
+      const mappedAuctions = data.map((auction: Auction) => ({
+        ...auction,
+        timeWindow: formatTimeDiff(auction.timeWindow),
+      }))
+      setAuctions(mappedAuctions)
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [data])
 
   const userId = session?.user.id
 
   const renderRows = () => {
-    return data.map(
+    return auctions.map(
       ({ id, name, startPrice, timeWindow, ownerId }: Auction, idx: number) => {
         return (
           <tr className={cn({ 'bg-gray-100': idx % 2 === 0 })} key={id}>
@@ -22,9 +40,7 @@ export default function Auctions({ data, isLoading }: Props) {
             <td className='border px-4 py-2 text-center'>
               {accounting.formatMoney(startPrice)}
             </td>
-            <td className='border px-4 py-2 text-center'>
-              {formatTimeDiff(timeWindow)}
-            </td>
+            <td className='border px-4 py-2 text-center'>{timeWindow}</td>
             <td className='border px-4 py-2 text-center'>
               <button
                 className={cn('text-white font-bold py-2 px-6 rounded', {

@@ -23,9 +23,15 @@ export default function NewAuction() {
     const name = formData.get('name') as string
     const startPrice = formData.get('startPrice') as string
 
-    const daysToAdd = parseInt(formData.get('day') as string)
-    const hoursToAdd = parseInt(formData.get('hour') as string)
-    const minutesToAdd = parseInt(formData.get('minute') as string)
+    const daysToAdd = formData.get('day')
+      ? parseInt(formData.get('day') as string)
+      : 0
+    const hoursToAdd = formData.get('hour')
+      ? parseInt(formData.get('hour') as string)
+      : 0
+    const minutesToAdd = formData.get('minute')
+      ? parseInt(formData.get('minute') as string)
+      : 0
 
     const timeWindow = dayjs()
       .add(daysToAdd, 'day')

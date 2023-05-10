@@ -26,8 +26,14 @@ export default function formatTimeDiff(date: string): string {
       minutes === 0 ? '' : ` and ${minutes} min${minutes > 1 ? 's' : ''}`
 
     return `${hours} hour${hours > 1 ? 's' : ''}${minsText}`
-  } else {
+  } else if (duration.asMinutes() > 1) {
     const minutes = Math.floor(duration.asMinutes())
-    return `${minutes} min${minutes > 1 ? 's' : ''}`
+    const seconds = duration.seconds()
+    return `${minutes} min${minutes > 1 ? 's' : ''} and ${seconds} sec${
+      seconds > 1 ? 's' : ''
+    }`
+  } else {
+    const seconds = Math.floor(duration.asSeconds())
+    return `${seconds} second${seconds > 1 ? 's' : ''}`
   }
 }
