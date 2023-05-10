@@ -15,15 +15,17 @@ export default function formatTimeDiff(date: string): string {
   if (duration.asDays() >= 1) {
     const days = Math.floor(duration.asDays())
     const hours = duration.hours()
-    return `${days} day${days > 1 ? 's' : ''} and ${hours} hour${
-      hours > 1 ? 's' : ''
-    }`
+    const hoursText =
+      hours === 0 ? '' : ` and ${hours} hour${hours > 1 ? 's' : ''}`
+
+    return `${days} day${days > 1 ? 's' : ''}${hoursText}`
   } else if (duration.asHours() >= 1) {
     const hours = Math.floor(duration.asHours())
     const minutes = duration.minutes()
-    return `${hours} hour${hours > 1 ? 's' : ''} and ${minutes} min${
-      minutes > 1 ? 's' : ''
-    }`
+    const minsText =
+      minutes === 0 ? '' : ` and ${minutes} min${minutes > 1 ? 's' : ''}`
+
+    return `${hours} hour${hours > 1 ? 's' : ''}${minsText}`
   } else {
     const minutes = Math.floor(duration.asMinutes())
     return `${minutes} min${minutes > 1 ? 's' : ''}`
