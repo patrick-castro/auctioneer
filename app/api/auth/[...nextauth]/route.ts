@@ -48,7 +48,11 @@ const handler = NextAuth({
     signOut: '/',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update' && session?.updatedBalance) {
+        token.balance = session.updatedBalance
+      }
+
       return { ...token, ...user }
     },
 

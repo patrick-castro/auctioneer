@@ -1,17 +1,39 @@
-import { Metadata } from 'next'
-import './styles.css'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'Make New Deposit',
-}
+import { FormEvent } from 'react'
+import './styles.css'
+import createNewDeposit from '@/utils/createNewDeposit'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function NewDeposit() {
+  const { data: session, update } = useSession()
+  const router = useRouter()
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!session?.user) return
+    const { accessToken, balance } = session.user
+
+    const formData = new FormData(e.currentTarget)
+    const amount = (formData.get('amount') || '0') as string
+
+    if (!accessToken) return
+
+    const totalAmount = parseFloat(balance) + parseFloat(amount)
+
+    await createNewDeposit(amount, accessToken)
+    await update({ updatedBalance: totalAmount })
+    router.push('auction')
+  }
+
   return (
     <div className='login-form'>
       <div className='pb-4'>
         <h1 className='text-2xl font-semibold'>Make New Deposit </h1>
       </div>
-      <form>
+      <form onSubmit={onSubmit}>
         <div className='mt-5'>
           <p className='text-sm font-semibold mb-2 text-gray-500'>Amount</p>
           <input
