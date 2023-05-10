@@ -5,6 +5,7 @@ import './styles.css'
 import createNewDeposit from '@/utils/createNewDeposit'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function NewDeposit() {
   const { data: session, update } = useSession()
@@ -46,9 +47,12 @@ export default function NewDeposit() {
         </div>
 
         <div className='flex justify-end'>
-          <button className='btn btn-primary w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 font-semibold'>
+          <Link
+            href='/auction'
+            className='btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 font-semibold'
+          >
             Back
-          </button>
+          </Link>
 
           <button
             className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4 button ml-5 font-semibold'
