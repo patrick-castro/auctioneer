@@ -1,6 +1,7 @@
 import accounting from 'accounting'
 import cn from 'classnames'
 import { useSession } from 'next-auth/react'
+import formatTimeDiff from '@/utils/formatTimeDiff'
 
 interface Props {
   data: Auction[]
@@ -21,7 +22,9 @@ export default function Auctions({ data, isLoading }: Props) {
             <td className='border px-4 py-2 text-center'>
               {accounting.formatMoney(startPrice)}
             </td>
-            <td className='border px-4 py-2 text-center'>{timeWindow}</td>
+            <td className='border px-4 py-2 text-center'>
+              {formatTimeDiff(timeWindow)}
+            </td>
             <td className='border px-4 py-2 text-center'>
               <button
                 className={cn('text-white font-bold py-2 px-6 rounded', {
@@ -63,10 +66,10 @@ export default function Auctions({ data, isLoading }: Props) {
       <table className='table-auto w-full'>
         <thead>
           <tr>
-            <th className='w-2/5 px-4 py-2'>Name</th>
-            <th className='w-1/5 px-4 py-2'>Current Price</th>
-            <th className='w-1/5 px-4 py-2'>Duration</th>
-            <th className='w-1/5 px-4 py-2'>Bid</th>
+            <th className='w-5/12 px-4 py-2'>Name</th>
+            <th className='w-2/12 px-4 py-2'>Current Price</th>
+            <th className='w-3/12 px-4 py-2'>Duration</th>
+            <th className='w-2/12 px-4 py-2'>Bid</th>
           </tr>
         </thead>
         <tbody>{renderRows()}</tbody>
