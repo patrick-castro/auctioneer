@@ -29,7 +29,7 @@ model Auction {
   name       String
   startPrice Decimal
   timeWindow DateTime
-  status     String
+  status     String?
 
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String
