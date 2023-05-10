@@ -4,9 +4,9 @@ import { GoChevronDown, GoX } from 'react-icons/go'
 import { MdLocalAtm } from 'react-icons/md'
 import { TbLogout } from 'react-icons/tb'
 import { useSession, signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 import './styles.css'
-import Link from 'next/link'
 
 type IconProps = {
   children: ReactNode
@@ -29,6 +29,7 @@ export const Dropdown = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [menuTop, setMenuTop] = useState<string>()
   const [menuRight, setMenuRight] = useState<string>()
+  const router = useRouter()
 
   const { data: session } = useSession()
   const { user } = session || {}
@@ -50,6 +51,21 @@ export const Dropdown = () => {
     setIsOpen(!isOpen)
   }
 
+  const onCreateAuction = () => {
+    router.push('/auction/new')
+    setIsOpen(false)
+  }
+
+  const onDeposit = () => {
+    router.push('/deposit/new')
+    setIsOpen(false)
+  }
+
+  const onLogOut = () => {
+    signOut()
+    setIsOpen(false)
+  }
+
   return (
     <div className={`dropdown ${isOpen ? 'open' : ''}`}>
       {!!user && (
@@ -66,15 +82,15 @@ export const Dropdown = () => {
         className={`menu ${isOpen ? 'open' : ''}`}
         style={{ right: menuRight, top: menuTop }}
       >
-        <Link href='/auction/new' className='redirect-btn'>
+        <button onClick={onCreateAuction} className='redirect-btn'>
           <RiAuctionLine />
           <span>Create Auction</span>
-        </Link>
-        <Link href='/deposit/new' className='redirect-btn'>
+        </button>
+        <button onClick={onDeposit} className='redirect-btn'>
           <MdLocalAtm />
           <span>Deposit</span>
-        </Link>
-        <button onClick={() => signOut()}>
+        </button>
+        <button onClick={onLogOut}>
           <TbLogout />
           <span>Logout</span>
         </button>
