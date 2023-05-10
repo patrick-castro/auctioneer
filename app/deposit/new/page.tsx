@@ -25,7 +25,7 @@ export default function NewDeposit() {
 
     await createNewDeposit(amount, accessToken)
     await update({ updatedBalance: totalAmount })
-    router.push('auction')
+    router.push('/auction')
   }
 
   return (
