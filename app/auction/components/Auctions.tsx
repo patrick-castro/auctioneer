@@ -3,6 +3,7 @@ import cn from 'classnames'
 import { useSession } from 'next-auth/react'
 import formatTimeDiff from '@/utils/formatTimeDiff'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   data: Auction[]
@@ -12,6 +13,7 @@ interface Props {
 export default function Auctions({ data, isLoading }: Props) {
   const { data: session } = useSession()
   const [auctions, setAuctions] = useState<Auction[]>([])
+  const router = useRouter()
 
   useEffect(() => {
     if (!data) return
@@ -47,6 +49,7 @@ export default function Auctions({ data, isLoading }: Props) {
                   'bg-blue-500 hover:bg-blue-600': ownerId !== userId,
                   'bg-blue-200': ownerId === userId,
                 })}
+                onClick={() => router.push(`/auction/${id}/bid`)}
                 disabled={ownerId === userId}
               >
                 Bid
