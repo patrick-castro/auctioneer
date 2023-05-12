@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import Auctions from './components/Auctions'
+import { useSession } from 'next-auth/react'
 
 import './styles.css'
 
@@ -18,8 +19,13 @@ enum FilterOption {
 
 const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
 
-async function fetcher(url: string) {
-  const res = await fetch(url)
+async function fetcher(url: string, token: string) {
+  const res = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  })
   return await res.json()
 }
 
@@ -27,6 +33,8 @@ export default function Auction() {
   const [filter, setFilter] = useState<Filter>(FilterOption.All)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session } = useSession()
+  const token = session?.user.accessToken || ''
 
   useEffect(() => {
     const searchFilter = searchParams.get('filter')
@@ -37,10 +45,8 @@ export default function Auction() {
     }
   }, [])
 
-  const { data, error, isLoading } = useSWR(
-    `http://localhost:3000/api/auction?filter=${filter}`,
-    fetcher
-  )
+  const url = `http://localhost:3000/api/auction?filter=${filter}`
+  const { data, error, isLoading } = useSWR(url, () => fetcher(url, token))
 
   const handleSelectFilter = (option: Filter) => {
     setFilter(option)
@@ -82,7 +88,7 @@ export default function Auction() {
           </button>
         </div>
       </div>
-      <Auctions data={data} isLoading={isLoading} />
+      <Auctions auctions={data} isLoading={isLoading} />
     </main>
   )
 }

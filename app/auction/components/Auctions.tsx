@@ -6,35 +6,35 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface Props {
-  data: Auction[]
+  auctions: Auction[]
   isLoading: boolean
 }
 
-export default function Auctions({ data, isLoading }: Props) {
+export default function Auctions({ auctions, isLoading }: Props) {
   const { data: session } = useSession()
-  const [auctions, setAuctions] = useState<Auction[]>([])
+  const [memoizedAuctions, setMemoizedAuctions] = useState<Auction[]>([])
   const router = useRouter()
 
   useEffect(() => {
-    if (!data) return
+    if (!auctions || !auctions.length) return
 
     const timer = setInterval(() => {
-      const mappedAuctions = data.map((auction: Auction) => ({
+      const mappedAuctions = auctions.map((auction: Auction) => ({
         ...auction,
         timeWindow: formatTimeDiff(auction.timeWindow),
       }))
-      setAuctions(mappedAuctions)
+      setMemoizedAuctions(mappedAuctions)
     }, 1000)
 
     return () => {
       clearInterval(timer)
     }
-  }, [data])
+  }, [auctions])
 
   const userId = session?.user.id
 
   const renderRows = () => {
-    return auctions.map(
+    return memoizedAuctions.map(
       ({ id, name, startPrice, timeWindow, ownerId }: Auction, idx: number) => {
         return (
           <tr className={cn({ 'bg-gray-100': idx % 2 === 0 })} key={id}>
