@@ -4,6 +4,20 @@ import dayjs from 'dayjs'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
+  const accessToken = request.headers.get('authorization') || ''
+  const jwt = verifyJwt(accessToken)
+
+  if (!accessToken || !jwt) {
+    return new NextResponse(
+      JSON.stringify({
+        error: 'unauthorized',
+      }),
+      {
+        status: 401,
+      }
+    )
+  }
+
   const filter = request.nextUrl.searchParams.get('filter')
   const currentDateTime = dayjs().toDate()
 
@@ -30,9 +44,30 @@ export async function GET(request: NextRequest) {
       createdAt: 'desc',
     },
     where: whereCondition,
+    include: {
+      bids: {
+        select: { price: true },
+        orderBy: {
+          price: 'desc',
+        },
+        // Takes only the bid with the highest value
+        take: 1,
+      },
+    },
   })
 
-  return new Response(JSON.stringify(auctions))
+  const mappedAuctions = auctions.map((auction) => {
+    const { bids, ...restOfAuction } = auction
+
+    // Update startPrice value if the highest bid has a higher value
+    if (bids.length > 0 && bids[0].price > restOfAuction.startPrice) {
+      restOfAuction.startPrice = bids[0].price
+    }
+
+    return restOfAuction
+  })
+
+  return new Response(JSON.stringify(mappedAuctions))
 }
 
 export async function POST(request: Request) {
