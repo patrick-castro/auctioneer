@@ -34,6 +34,29 @@ export default function Auctions({ auctions, isLoading }: Props) {
   const userId = session?.user.id
 
   const renderRows = () => {
+    if (isLoading) {
+      // Fill random item to make map work
+      const blankArr = new Array(6).fill('a')
+      return blankArr.map((item: string, idx: number) => {
+        return (
+          <tr className={cn({ 'bg-gray-100': idx % 2 === 0 })} key={idx}>
+            <td className='border px-4 py-2'>
+              <div className='w-2/3 h-5 bg-gray-200 rounded animate-pulse my-2'></div>
+            </td>
+            <td className='border px-4 py-2'>
+              <div className='w-full h-5 bg-gray-200 rounded animate-pulse my-2'></div>
+            </td>
+            <td className='border px-4 py-2'>
+              <div className='w-full h-5 bg-gray-200 rounded animate-pulse my-2'></div>
+            </td>
+            <td className='border px-4 py-2 text-center align-middle '>
+              <div className='w-full h-5 bg-gray-200 rounded animate-pulse my-2'></div>
+            </td>
+          </tr>
+        )
+      })
+    }
+
     return memoizedAuctions.map(
       ({ id, name, startPrice, timeWindow, ownerId }: Auction, idx: number) => {
         return (
@@ -61,25 +84,6 @@ export default function Auctions({ auctions, isLoading }: Props) {
           </tr>
         )
       }
-    )
-  }
-
-  const renderLoadingState = () => {
-    return (
-      <tr className='animate-pulse'>
-        <td className='w-2/5 px-4 py-2 bg-gray-100'></td>
-        <td className='w-1/5 px-4 py-2 bg-gray-100'></td>
-        <td className='w-1/5 px-4 py-2 bg-gray-100'></td>
-        <td className='w-1/5 px-4 py-2 bg-gray-100'></td>
-      </tr>
-    )
-  }
-
-  if (isLoading) {
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
     )
   }
 
