@@ -17,10 +17,10 @@ export default function NewDeposit() {
     if (!session?.user) return
     const { accessToken, balance } = session.user
 
+    if (!accessToken) return
+
     const formData = new FormData(e.currentTarget)
     const amount = (formData.get('amount') || '0') as string
-
-    if (!accessToken) return
 
     const totalAmount = parseFloat(balance) + parseFloat(amount)
 

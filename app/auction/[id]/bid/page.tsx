@@ -5,10 +5,30 @@ import './styles.css'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import bidInAuction from '@/utils/bidInAuction'
 
-export default function NewDeposit() {
+interface Params {
+  params: {
+    id: string
+  }
+}
+
+export default function NewBid({ params: { id } }: Params) {
   const { data: session, update } = useSession()
   const router = useRouter()
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!session?.user) return
+    const { accessToken, balance } = session.user
+
+    const formData = new FormData(e.currentTarget)
+    const amount = (formData.get('amount') || '0') as string
+
+    await bidInAuction(id, amount, accessToken)
+    router.push('/auction')
+  }
 
   return (
     <div className='login-form'>
@@ -33,7 +53,7 @@ export default function NewDeposit() {
         </span>
       </div>
 
-      <form>
+      <form onSubmit={onSubmit}>
         <div className='mt-8'>
           <p className='text-sm font-semibold mb-2 text-gray-700'>Amount</p>
           <input
