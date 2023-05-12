@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google'
 
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 // Components
 import Navbar from '../components/Navbar'

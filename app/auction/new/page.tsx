@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import createNewAuction from '@/utils/createNewAuction'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { ToastContainer, toast } from 'react-toastify'
 
 export default function NewAuction() {
   const { data: session } = useSession()
@@ -15,32 +16,47 @@ export default function NewAuction() {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!session?.user) return
+    try {
+      toast.loading('Creating auction...')
 
-    const { accessToken } = session.user
+      if (!session?.user) {
+        throw new Error('No user session')
+      }
 
-    const formData = new FormData(e.currentTarget)
-    const name = formData.get('name') as string
-    const startPrice = formData.get('startPrice') as string
+      const { accessToken } = session.user
 
-    const daysToAdd = formData.get('day')
-      ? parseInt(formData.get('day') as string)
-      : 0
-    const hoursToAdd = formData.get('hour')
-      ? parseInt(formData.get('hour') as string)
-      : 0
-    const minutesToAdd = formData.get('minute')
-      ? parseInt(formData.get('minute') as string)
-      : 0
+      const formData = new FormData(e.currentTarget)
+      const name = formData.get('name') as string
+      const startPrice = formData.get('startPrice') as string
 
-    const timeWindow = dayjs()
-      .add(daysToAdd, 'day')
-      .add(hoursToAdd, 'hour')
-      .add(minutesToAdd, 'minute')
-      .format()
+      const daysToAdd = formData.get('day')
+        ? parseInt(formData.get('day') as string)
+        : 0
+      const hoursToAdd = formData.get('hour')
+        ? parseInt(formData.get('hour') as string)
+        : 0
+      const minutesToAdd = formData.get('minute')
+        ? parseInt(formData.get('minute') as string)
+        : 0
 
-    await createNewAuction({ name, startPrice, timeWindow }, accessToken)
-    router.push('/auction')
+      const timeWindow = dayjs()
+        .add(daysToAdd, 'day')
+        .add(hoursToAdd, 'hour')
+        .add(minutesToAdd, 'minute')
+        .format()
+
+      await createNewAuction({ name, startPrice, timeWindow }, accessToken)
+      toast.dismiss()
+      toast.success('Successfully created auction')
+
+      // Set a timer
+      setTimeout(function () {
+        router.push('/auction')
+      }, 3000)
+    } catch (error) {
+      toast.dismiss()
+      toast.error('Failed in creating auction')
+    }
   }
 
   return (
@@ -135,6 +151,18 @@ export default function NewAuction() {
           </button>
         </div>
       </form>
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </div>
   )
 }
