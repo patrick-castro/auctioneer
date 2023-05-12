@@ -1,13 +1,17 @@
 'use client'
 
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import './styles.css'
 import createNewDeposit from '@/utils/createNewDeposit'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import cn from 'classnames'
+import { ToastContainer, toast } from 'react-toastify'
 
 export default function NewDeposit() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | undefined>()
   const { data: session, update } = useSession()
   const router = useRouter()
 
@@ -21,12 +25,35 @@ export default function NewDeposit() {
 
     const formData = new FormData(e.currentTarget)
     const amount = (formData.get('amount') || '0') as string
+    const parsedAmount = parseFloat(amount)
 
-    const totalAmount = parseFloat(balance) + parseFloat(amount)
+    // Validation
+    if (!parsedAmount) {
+      setError('Please enter a valid amount')
+      return
+    }
 
-    await createNewDeposit(amount, accessToken)
-    await update({ updatedBalance: totalAmount })
-    router.push('/auction')
+    try {
+      setIsLoading(true)
+      toast.loading('Making a deposit...')
+
+      const totalAmount = parseFloat(balance) + parsedAmount
+
+      await createNewDeposit(amount, accessToken)
+      await update({ updatedBalance: totalAmount })
+
+      toast.dismiss()
+      toast.success('Successfully made deposit')
+
+      // Set a timer
+      setTimeout(function () {
+        router.push('/auction')
+        setIsLoading(false)
+      }, 3500) // 3.3 seconds
+    } catch (error) {
+      toast.dismiss()
+      toast.error('Failed in making a deposit')
+    }
   }
 
   return (
@@ -36,15 +63,25 @@ export default function NewDeposit() {
       </div>
       <form onSubmit={onSubmit}>
         <div className='mt-5'>
-          <p className='text-sm font-semibold mb-2 text-gray-500'>Amount</p>
+          <p
+            className={cn('text-sm font-semibold mb-2 text-gray-500', {
+              'text-red-600': !!error,
+            })}
+          >
+            Amount
+          </p>
           <input
             type='number'
             step='0.25'
-            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+            className={cn(
+              'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+              { 'border-red-600': !!error, 'focus:border-blue-500': !error }
+            )}
             placeholder='$0.00'
             name='amount'
           />
         </div>
+        {!!error && <p className='text-red-600'>{error}</p>}
 
         <div className='flex justify-end'>
           <Link
@@ -62,6 +99,18 @@ export default function NewDeposit() {
           </button>
         </div>
       </form>
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </div>
   )
 }
