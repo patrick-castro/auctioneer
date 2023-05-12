@@ -11,12 +11,13 @@ import { ToastContainer, toast } from 'react-toastify'
 
 export default function NewDeposit() {
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | undefined>()
+  const [error, setError] = useState<string | null>()
   const { data: session, update } = useSession()
   const router = useRouter()
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError(null)
 
     if (!session?.user) return
     const { accessToken, balance } = session.user
@@ -84,16 +85,28 @@ export default function NewDeposit() {
         {!!error && <p className='text-red-600'>{error}</p>}
 
         <div className='flex justify-end'>
-          <Link
-            href='/auction'
-            className='btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 font-semibold'
+          <button
+            type='button'
+            onClick={() => router.back()}
+            className={cn(
+              'btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 font-semibold',
+              {
+                'opacity-75': isLoading,
+                'hover:text-white hover:bg-blue-500': !isLoading,
+              }
+            )}
+            disabled={isLoading}
           >
             Back
-          </Link>
+          </button>
 
           <button
-            className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4 button ml-5 font-semibold'
+            className={cn(
+              'btn btn-primary w-full mt-8 text-white bg-blue-500 rounded-md py-4 button ml-5 font-semibold',
+              { 'opacity-75': isLoading, 'hover:bg-blue-600': !isLoading }
+            )}
             type='submit'
+            disabled={isLoading}
           >
             Create
           </button>
