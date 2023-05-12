@@ -84,7 +84,7 @@ export default function Auctions({ auctions, isLoading }: Props) {
   }
 
   return (
-    <section className='mt-8'>
+    <section className='mt-8 mb-24'>
       <table className='table-auto w-full'>
         <thead>
           <tr>
