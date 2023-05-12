@@ -4,20 +4,6 @@ import dayjs from 'dayjs'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  const accessToken = request.headers.get('authorization') || ''
-  const jwt = verifyJwt(accessToken)
-
-  if (!accessToken || !jwt) {
-    return new NextResponse(
-      JSON.stringify({
-        error: 'unauthorized',
-      }),
-      {
-        status: 401,
-      }
-    )
-  }
-
   const filter = request.nextUrl.searchParams.get('filter')
   const currentDateTime = dayjs().toDate()
 

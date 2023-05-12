@@ -19,13 +19,8 @@ enum FilterOption {
 
 const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
 
-async function fetcher(url: string, token: string) {
-  const res = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-  })
+async function fetcher(url: string) {
+  const res = await fetch(url)
   return await res.json()
 }
 
@@ -46,7 +41,7 @@ export default function Auction() {
   }, [])
 
   const url = `http://localhost:3000/api/auction?filter=${filter}`
-  const { data, error, isLoading } = useSWR(url, () => fetcher(url, token))
+  const { data, error, isLoading } = useSWR(url, fetcher)
 
   const handleSelectFilter = (option: Filter) => {
     setFilter(option)
