@@ -45,12 +45,15 @@ export default function Auctions({ data, isLoading }: Props) {
             <td className='border px-4 py-2 text-center'>{timeWindow}</td>
             <td className='border px-4 py-2 text-center'>
               <button
-                className={cn('text-white font-bold py-2 px-6 rounded', {
-                  'bg-blue-500 hover:bg-blue-600': ownerId !== userId,
-                  'bg-blue-200': ownerId === userId,
-                })}
+                className={cn(
+                  `text-white font-bold py-2 px-6 rounded ${
+                    ownerId === userId || timeWindow === '0'
+                      ? 'bg-blue-200'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                  }`
+                )}
                 onClick={() => router.push(`/auction/${id}/bid`)}
-                disabled={ownerId === userId}
+                disabled={ownerId === userId || timeWindow === '0'}
               >
                 Bid
               </button>
