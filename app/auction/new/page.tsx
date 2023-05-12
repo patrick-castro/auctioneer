@@ -1,15 +1,16 @@
 'use client'
 
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import './styles.css'
 import { useSession } from 'next-auth/react'
 import dayjs from 'dayjs'
 import createNewAuction from '@/utils/createNewAuction'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { ToastContainer, toast } from 'react-toastify'
+import cn from 'classnames'
 
 export default function NewAuction() {
+  const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
 
@@ -17,6 +18,7 @@ export default function NewAuction() {
     e.preventDefault()
 
     try {
+      setIsLoading(true)
       toast.loading('Creating auction...')
 
       if (!session?.user) {
@@ -52,7 +54,8 @@ export default function NewAuction() {
       // Set a timer
       setTimeout(function () {
         router.push('/auction')
-      }, 3000)
+        setIsLoading(false)
+      }, 3500) // 3.3 seconds
     } catch (error) {
       toast.dismiss()
       toast.error('Failed in creating auction')
@@ -136,16 +139,28 @@ export default function NewAuction() {
         </div>
 
         <div className='flex justify-end'>
-          <Link
-            href='/auction'
-            className='btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 font-semibold'
+          <button
+            type='button'
+            className={cn(
+              'btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 font-semibold',
+              {
+                'opacity-75': isLoading,
+                'hover:text-white hover:bg-blue-500': !isLoading,
+              }
+            )}
+            onClick={() => router.back()}
+            disabled={isLoading}
           >
             Back
-          </Link>
+          </button>
 
           <button
-            className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4 button ml-5 font-semibold'
+            className={cn(
+              'btn btn-primary w-full mt-8 text-white bg-blue-500 rounded-md py-4 button ml-5 font-semibold',
+              { 'opacity-75': isLoading, 'hover:bg-blue-600': !isLoading }
+            )}
             type='submit'
+            disabled={isLoading}
           >
             Create
           </button>
