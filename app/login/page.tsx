@@ -2,24 +2,32 @@
 
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
-import { FormEvent, useRef } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 
-export default function Login() {
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default function Login({ searchParams }: Props) {
+  const [isLoading, setIsLoading] = useState(false)
   const username = useRef('')
   const password = useRef('')
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const result = await signIn('credentials', {
+    setIsLoading(true)
+    await signIn('credentials', {
       username: username.current,
       password: password.current,
       redirect: true,
       callbackUrl: '/auction',
     })
 
-    // CHECK IF RESULT IS UNDEFINED
+    setIsLoading(false)
   }
+
+  const hasError = !!searchParams?.error
 
   return (
     <div className='login-form'>
@@ -52,9 +60,12 @@ export default function Login() {
           />
         </div>
 
+        {hasError && <p className='text-red-600'>Invalid credentials</p>}
+
         <button
           className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4'
           type='submit'
+          disabled={isLoading}
         >
           Log in
         </button>
