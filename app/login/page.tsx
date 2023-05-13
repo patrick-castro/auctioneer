@@ -1,6 +1,6 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { FormEvent, useRef, useState } from 'react'
 
@@ -10,6 +10,8 @@ interface Props {
 
 export default function Login({ searchParams }: Props) {
   const [isLoading, setIsLoading] = useState(false)
+  const { status } = useSession()
+
   const username = useRef('')
   const password = useRef('')
 
@@ -28,6 +30,21 @@ export default function Login({ searchParams }: Props) {
   }
 
   const hasError = !!searchParams?.error
+
+  if (!status || status === 'loading') return
+
+  if (status === 'authenticated') {
+    return (
+      <div className='login-form'>
+        <h1 className='text-2xl font-semibold mb-5'>
+          You are already logged in!
+        </h1>
+        <Link href='/auction' className='underline text-blue-600'>
+          Go back to Auctions page
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div className='login-form'>
