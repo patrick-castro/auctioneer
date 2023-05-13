@@ -1,11 +1,12 @@
 'use client'
 
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import './styles.css'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import bidInAuction from '@/utils/bidInAuction'
+import cn from 'classnames'
 
 interface Params {
   params: {
@@ -14,17 +15,31 @@ interface Params {
 }
 
 export default function NewBid({ params: { id } }: Params) {
-  const { data: session, update } = useSession()
+  const [error, setError] = useState('')
+  const { data: session } = useSession()
   const router = useRouter()
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!session?.user) return
+    if (!session?.user) {
+      throw new Error('No user session')
+    }
+
     const { accessToken, balance } = session.user
 
     const formData = new FormData(e.currentTarget)
-    const amount = (formData.get('amount') || '0') as string
+    const amount = formData.get('amount') as string
+
+    if (!amount) {
+      setError('Please enter a valid amount')
+      return
+    }
+
+    if (parseFloat(amount) < parseFloat(balance)) {
+      setError('Insufficient balance to bid')
+      return
+    }
 
     await bidInAuction(id, amount, accessToken)
     router.push('/auction')
@@ -55,15 +70,25 @@ export default function NewBid({ params: { id } }: Params) {
 
       <form onSubmit={onSubmit}>
         <div className='mt-8'>
-          <p className='text-sm font-semibold mb-2 text-gray-700'>Amount</p>
+          <p
+            className={cn('text-sm font-semibold mb-2 text-gray-700', {
+              'text-red-600': !!error,
+            })}
+          >
+            Amount
+          </p>
           <input
             type='number'
             step='0.25'
-            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+            className={cn(
+              'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+              { 'border-red-600': !!error, 'focus:border-blue-500': !error }
+            )}
             placeholder='$0.00'
             name='amount'
           />
         </div>
+        {!!error && <p className='text-red-600'>{error}</p>}
 
         <div className='flex justify-end'>
           <Link
