@@ -22,7 +22,7 @@ export default function Register() {
       const email = formData.get('email')
       const password = formData.get('password')
 
-      const res = await fetch(`${appUrl}}/api/user`, {
+      const res = await fetch(`${appUrl}/api/user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
