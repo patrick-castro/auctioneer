@@ -4,9 +4,12 @@ import { FormEvent, useState } from 'react'
 import './styles.css'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import bidInAuction from '@/utils/bidInAuction'
 import cn from 'classnames'
+import useSWR from 'swr'
+import fetcher from '@/utils/fetcher'
+import formatTimeDiff from '@/utils/formatTimeDiff'
+import accounting from 'accounting'
 
 interface Params {
   params: {
@@ -19,8 +22,19 @@ export default function NewBid({ params: { id } }: Params) {
   const { data: session } = useSession()
   const router = useRouter()
 
+  const {
+    data: auctionData,
+    error: auctionError,
+    isLoading,
+  } = useSWR(`http://localhost:3000/api/auction/${id}`, fetcher)
+
+  const { name, startPrice, timeWindow } = auctionData || {}
+  const duration = formatTimeDiff(timeWindow)
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (isLoading) return
 
     if (!session?.user) {
       throw new Error('No user session')
@@ -36,8 +50,13 @@ export default function NewBid({ params: { id } }: Params) {
       return
     }
 
-    if (parseFloat(amount) < parseFloat(balance)) {
+    if (parseFloat(amount) > parseFloat(balance)) {
       setError('Insufficient balance to bid')
+      return
+    }
+
+    if (parseFloat(amount) < parseFloat(startPrice)) {
+      setError('Bid amount must be higher than the current price')
       return
     }
 
@@ -47,24 +66,37 @@ export default function NewBid({ params: { id } }: Params) {
 
   return (
     <div className='login-form'>
-      <div className='pb-8'>
+      <div className='pb-6'>
         <h1 className='text-2xl font-semibold'>Bid for this Item</h1>
       </div>
 
-      <div className='flex flex-col gap-2'>
-        <span className='flex'>
+      <div className='flex flex-col gap-4'>
+        <span className='flex items-center'>
           <label className='font-semibold w-1/3 text-gray-700'>Name:</label>
-          <p className='w-2/3'>Gaming Computer</p>
+
+          {isLoading ? (
+            <div className='w-6/12 h-5 bg-gray-200 rounded animate-pulse'></div>
+          ) : (
+            <p className='w-2/3'>{name}</p>
+          )}
         </span>
-        <span className='flex'>
+        <span className='flex items-center'>
           <label className='font-semibold w-1/3 text-gray-700'>
             Current Price:
           </label>
-          <p className='w-2/3'>$1000.00</p>
+          {isLoading ? (
+            <div className='w-3/12 h-5 bg-gray-200 rounded animate-pulse'></div>
+          ) : (
+            <p className='w-2/3'>{accounting.formatMoney(startPrice)}</p>
+          )}
         </span>
-        <span className='flex'>
+        <span className='flex items-center'>
           <label className='font-semibold w-1/3 text-gray-700'>Duration:</label>
-          <p className='w-2/3'>1 hour and 56 mins</p>
+          {isLoading ? (
+            <div className='w-4/12 h-5 bg-gray-200 rounded animate-pulse'></div>
+          ) : (
+            <p className='w-2/3'>{duration}</p>
+          )}
         </span>
       </div>
 
@@ -91,16 +123,28 @@ export default function NewBid({ params: { id } }: Params) {
         {!!error && <p className='text-red-600'>{error}</p>}
 
         <div className='flex justify-end'>
-          <Link
-            href='/auction'
-            className='btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 hover:text-white hover:bg-blue-500 font-semibold'
+          <button
+            type='button'
+            onClick={() => router.back()}
+            className={cn(
+              'btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 font-semibold',
+              {
+                'opacity-75': isLoading,
+                'hover:text-white hover:bg-blue-500': !isLoading,
+              }
+            )}
+            disabled={isLoading}
           >
             Back
-          </Link>
+          </button>
 
           <button
-            className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4 button ml-5 font-semibold'
+            className={cn(
+              'btn btn-primary w-full mt-8 text-white bg-blue-500 rounded-md py-4 button ml-5 font-semibold',
+              { 'opacity-75': isLoading, 'hover:bg-blue-600': !isLoading }
+            )}
             type='submit'
+            disabled={isLoading}
           >
             Bid
           </button>

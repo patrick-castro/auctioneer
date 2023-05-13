@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import Auctions from './components/Auctions'
 import { useSession } from 'next-auth/react'
+import fetcher from '@/utils/fetcher'
 
 import './styles.css'
 
@@ -18,11 +19,6 @@ enum FilterOption {
 }
 
 const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
-
-async function fetcher(url: string) {
-  const res = await fetch(url)
-  return await res.json()
-}
 
 export default function Auction() {
   const [filter, setFilter] = useState<Filter>(FilterOption.All)
