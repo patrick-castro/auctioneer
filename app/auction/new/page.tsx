@@ -9,17 +9,25 @@ import { useRouter } from 'next/navigation'
 import { ToastContainer, toast } from 'react-toastify'
 import cn from 'classnames'
 
+interface Errors {
+  name?: string
+  startPrice?: string
+  timeWindow?: string
+}
+
 export default function NewAuction() {
   const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState<Errors>({})
   const { data: session } = useSession()
   const router = useRouter()
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setErrors({})
+    const errorMap: Errors = {}
 
     try {
       setIsLoading(true)
-      toast.loading('Creating auction...')
 
       if (!session?.user) {
         throw new Error('No user session')
@@ -29,7 +37,14 @@ export default function NewAuction() {
 
       const formData = new FormData(e.currentTarget)
       const name = formData.get('name') as string
+      if (!name) {
+        errorMap.name = 'Name should not be empty'
+      }
+
       const startPrice = formData.get('startPrice') as string
+      if (!startPrice) {
+        errorMap.startPrice = 'Starting price should not be empty'
+      }
 
       const daysToAdd = formData.get('day')
         ? parseInt(formData.get('day') as string)
@@ -40,6 +55,20 @@ export default function NewAuction() {
       const minutesToAdd = formData.get('minute')
         ? parseInt(formData.get('minute') as string)
         : 0
+
+      if (!daysToAdd && !hoursToAdd && !minutesToAdd) {
+        errorMap.timeWindow = 'Time window should not be empty'
+      }
+
+      // Cancel if there's error/s
+      if (Object.values(errorMap).length > 0) {
+        setErrors(errorMap)
+        toast.dismiss()
+        setIsLoading(false)
+        return
+      }
+
+      toast.loading('Creating auction...')
 
       const timeWindow = dayjs()
         .add(daysToAdd, 'day')
@@ -54,7 +83,6 @@ export default function NewAuction() {
       // Set a timer
       setTimeout(function () {
         router.push('/auction')
-        setIsLoading(false)
       }, 3500) // 3.3 seconds
     } catch (error) {
       toast.dismiss()
@@ -69,35 +97,65 @@ export default function NewAuction() {
       </div>
       <form onSubmit={onSubmit}>
         <div className='mt-5'>
-          <p className='text-sm font-semibold mb-2 text-gray-500'>Name</p>
+          <p
+            className={cn('text-sm font-semibold mb-2 text-gray-500', {
+              'text-red-600': errors['name'],
+            })}
+          >
+            Name
+          </p>
           <input
             type='text'
-            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+            className={cn(
+              'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+              {
+                'border-red-600': !!errors['name'],
+                'focus:border-blue-500': !errors['name'],
+              }
+            )}
             name='name'
             placeholder='Auction Name'
           />
         </div>
 
         <div className='mt-5'>
-          <p className='text-sm font-semibold mb-2 text-gray-500'>
-            Start Price
+          <p
+            className={cn('text-sm font-semibold mb-2 text-gray-500', {
+              'text-red-600': errors['startPrice'],
+            })}
+          >
+            Starting Price
           </p>
           <input
             type='number'
             step='0.25'
-            className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+            className={cn(
+              'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+              {
+                'border-red-600': !!errors['startPrice'],
+                'focus:border-blue-500': !errors['startPrice'],
+              }
+            )}
             placeholder='$0.00'
             name='startPrice'
           />
         </div>
 
         <div className='mt-5'>
-          <p className='text-sm font-semibold mb-2 text-gray-500'>
+          <p
+            className={cn('text-sm font-semibold mb-2 text-gray-500', {
+              'text-red-600': !!errors['timeWindow'],
+            })}
+          >
             Time Window
           </p>
           <div className='flex gap-4'>
             <div className='flex flex-col flex-1'>
-              <label className='text-sm font-semibold mb-2 text-gray-500'>
+              <label
+                className={cn('text-sm font-semibold mb-2 text-gray-500', {
+                  'text-red-600': !!errors['timeWindow'],
+                })}
+              >
                 Days
               </label>
               <input
@@ -105,12 +163,22 @@ export default function NewAuction() {
                 min='0'
                 max='365'
                 placeholder='0'
-                className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+                className={cn(
+                  'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+                  {
+                    'border-red-600': !!errors['timeWindow'],
+                    'focus:border-blue-500': !errors['timeWindow'],
+                  }
+                )}
                 name='day'
               />
             </div>
             <div className='flex flex-col flex-1'>
-              <label className='text-sm font-semibold mb-2 text-gray-500'>
+              <label
+                className={cn('text-sm font-semibold mb-2 text-gray-500', {
+                  'text-red-600': !!errors['timeWindow'],
+                })}
+              >
                 Hours
               </label>
               <input
@@ -118,12 +186,22 @@ export default function NewAuction() {
                 min='0'
                 max='23'
                 placeholder='0'
-                className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+                className={cn(
+                  'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+                  {
+                    'border-red-600': !!errors['timeWindow'],
+                    'focus:border-blue-500': !errors['timeWindow'],
+                  }
+                )}
                 name='hour'
               />
             </div>
             <div className='flex flex-col flex-1'>
-              <label className='text-sm font-semibold mb-2 text-gray-500'>
+              <label
+                className={cn('text-sm font-semibold mb-2 text-gray-500', {
+                  'text-red-600': !!errors['timeWindow'],
+                })}
+              >
                 Minutes
               </label>
               <input
@@ -131,7 +209,13 @@ export default function NewAuction() {
                 min='0'
                 max='59'
                 placeholder='0'
-                className='container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500'
+                className={cn(
+                  'container mt-0 mb-2 h-14 py-4 box-border px-5 border border-gray-400 rounded-md focus:outline-none',
+                  {
+                    'border-red-600': !!errors['timeWindow'],
+                    'focus:border-blue-500': !errors['timeWindow'],
+                  }
+                )}
                 name='minute'
               />
             </div>
