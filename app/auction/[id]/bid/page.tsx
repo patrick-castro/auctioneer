@@ -10,6 +10,7 @@ import useSWR from 'swr'
 import fetcher from '@/utils/fetcher'
 import formatTimeDiff from '@/utils/formatTimeDiff'
 import accounting from 'accounting'
+import { ToastContainer, toast } from 'react-toastify'
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
@@ -21,13 +22,14 @@ interface Params {
 
 export default function NewBid({ params: { id } }: Params) {
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
 
   const {
     data: auctionData,
     error: auctionError,
-    isLoading,
+    isLoading: auctionIsLoading,
   } = useSWR(`${appUrl}/api/auction/${id}`, fetcher)
 
   const { name, startPrice, timeWindow } = auctionData || {}
@@ -35,8 +37,9 @@ export default function NewBid({ params: { id } }: Params) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError('')
 
-    if (isLoading) return
+    if (auctionIsLoading) return
 
     if (!session?.user) {
       throw new Error('No user session')
@@ -62,8 +65,24 @@ export default function NewBid({ params: { id } }: Params) {
       return
     }
 
-    await bidInAuction(id, amount, accessToken)
-    router.push('/auction')
+    try {
+      setIsLoading(true)
+      toast.loading(`Bidding to ${name}...`)
+      await bidInAuction(id, amount, accessToken)
+
+      toast.dismiss()
+      toast.success(`Successfully bid to ${name}`)
+
+      // Set a timer
+      setTimeout(function () {
+        router.push('/auction')
+      }, 3500) // 3.3 seconds
+    } catch (error) {
+      toast.dismiss()
+      toast.error(`Failed to bid to ${name}`)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -76,7 +95,7 @@ export default function NewBid({ params: { id } }: Params) {
         <span className='flex items-center'>
           <label className='font-semibold w-1/3 text-gray-700'>Name:</label>
 
-          {isLoading ? (
+          {auctionIsLoading ? (
             <div className='w-6/12 h-5 bg-gray-200 rounded animate-pulse'></div>
           ) : (
             <p className='w-2/3'>{name}</p>
@@ -86,7 +105,7 @@ export default function NewBid({ params: { id } }: Params) {
           <label className='font-semibold w-1/3 text-gray-700'>
             Current Price:
           </label>
-          {isLoading ? (
+          {auctionIsLoading ? (
             <div className='w-3/12 h-5 bg-gray-200 rounded animate-pulse'></div>
           ) : (
             <p className='w-2/3'>{accounting.formatMoney(startPrice)}</p>
@@ -94,7 +113,7 @@ export default function NewBid({ params: { id } }: Params) {
         </span>
         <span className='flex items-center'>
           <label className='font-semibold w-1/3 text-gray-700'>Duration:</label>
-          {isLoading ? (
+          {auctionIsLoading ? (
             <div className='w-4/12 h-5 bg-gray-200 rounded animate-pulse'></div>
           ) : (
             <p className='w-2/3'>{duration}</p>
@@ -131,11 +150,12 @@ export default function NewBid({ params: { id } }: Params) {
             className={cn(
               'btn btn-primary text-center w-full mt-8 rounded-md py-4 button outline outline-2 outline-blue-500 text-blue-500 font-semibold',
               {
-                'opacity-75': isLoading,
-                'hover:text-white hover:bg-blue-500': !isLoading,
+                'opacity-75': isLoading || auctionIsLoading,
+                'hover:text-white hover:bg-blue-500':
+                  !isLoading || !auctionIsLoading,
               }
             )}
-            disabled={isLoading}
+            disabled={isLoading || auctionIsLoading}
           >
             Back
           </button>
@@ -143,15 +163,30 @@ export default function NewBid({ params: { id } }: Params) {
           <button
             className={cn(
               'btn btn-primary w-full mt-8 text-white bg-blue-500 rounded-md py-4 button ml-5 font-semibold',
-              { 'opacity-75': isLoading, 'hover:bg-blue-600': !isLoading }
+              {
+                'opacity-75': isLoading || auctionIsLoading,
+                'hover:bg-blue-600': !isLoading || !auctionIsLoading,
+              }
             )}
             type='submit'
-            disabled={isLoading}
+            disabled={isLoading || auctionIsLoading}
           >
             Bid
           </button>
         </div>
       </form>
+      <ToastContainer
+        position='bottom-right'
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     </div>
   )
 }

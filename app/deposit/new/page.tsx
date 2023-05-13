@@ -49,11 +49,12 @@ export default function NewDeposit() {
       // Set a timer
       setTimeout(function () {
         router.push('/auction')
-        setIsLoading(false)
       }, 3500) // 3.3 seconds
     } catch (error) {
       toast.dismiss()
       toast.error('Failed in making a deposit')
+    } finally {
+      setIsLoading(false)
     }
   }
 
