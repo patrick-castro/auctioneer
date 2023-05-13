@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   if (!accessToken || !jwt) {
     return new NextResponse(
       JSON.stringify({
-        error: 'unauthorized',
+        error: 'Unauthorized',
       }),
       {
         status: 401,

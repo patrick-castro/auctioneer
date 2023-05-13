@@ -1,5 +1,6 @@
 import { verifyJwt } from '@/lib/jwt'
 import prisma from '@/lib/prisma'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import bcrypt from 'bcrypt'
 import { NextResponse } from 'next/server'
 
@@ -9,17 +10,33 @@ interface RequestBody {
 }
 
 export async function POST(request: Request) {
-  const body: RequestBody = await request.json()
-  const user = await prisma.user.create({
-    data: {
-      email: body.email,
-      password: await bcrypt.hash(body.password, 10),
-    },
-  })
+  try {
+    const body: RequestBody = await request.json()
+    const user = await prisma.user.create({
+      data: {
+        email: body.email,
+        password: await bcrypt.hash(body.password, 10),
+      },
+    })
 
-  const { password, ...result } = user
+    const { password, ...result } = user
 
-  return new Response(JSON.stringify(result))
+    return new Response(JSON.stringify(result))
+  } catch (error) {
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Email already exists',
+        }),
+        {
+          status: 409,
+        }
+      )
+    }
+  }
 }
 
 export async function PUT(request: Request) {
@@ -29,7 +46,7 @@ export async function PUT(request: Request) {
   if (!accessToken || !jwt) {
     return new NextResponse(
       JSON.stringify({
-        error: 'unauthorized',
+        error: 'Unauthorized',
       }),
       {
         status: 401,

@@ -1,38 +1,53 @@
 'use client'
 
 import Link from 'next/link'
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 
 export default function Register() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
   const { status } = useSession()
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsLoading(true)
+    setError('')
 
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get('email')
-    const password = formData.get('password')
+    try {
+      const formData = new FormData(e.currentTarget)
+      const email = formData.get('email')
+      const password = formData.get('password')
 
-    const res = await fetch('http://localhost:3000/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    })
+      const res = await fetch('http://localhost:3000/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
 
-    const result = await res.json()
+      const result = await res.json()
 
-    await signIn('credentials', {
-      username: email,
-      password: password,
-      redirect: true,
-      callbackUrl: '/auction',
-    })
+      if (result.error) {
+        throw new Error(result.error)
+      }
+
+      await signIn('credentials', {
+        username: email,
+        password: password,
+        redirect: true,
+        callbackUrl: '/auction',
+      })
+    } catch (error) {
+      setError('Email already exists')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (!status || status === 'loading') return
@@ -79,9 +94,12 @@ export default function Register() {
           />
         </div>
 
+        {!!error && <p className='text-red-600'>{error}</p>}
+
         <button
           className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4'
           type='submit'
+          disabled={isLoading}
         >
           Register
         </button>
