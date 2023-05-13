@@ -4,8 +4,10 @@ interface Body {
   timeWindow: string
 }
 
+const appUrl = process.env.APP_URL
+
 export default async function createNewAuction(body: Body, token: string) {
-  const res = await fetch('http://localhost:3000/api/auction', {
+  const res = await fetch(`${appUrl}/api/auction`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

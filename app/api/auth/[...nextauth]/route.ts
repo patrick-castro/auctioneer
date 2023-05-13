@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+const appUrl = process.env.APP_URL
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -17,7 +19,7 @@ const handler = NextAuth({
 
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        const API_LINK = 'http://localhost:3000/api/login'
+        const API_LINK = `${appUrl}/api/login`
         const res = await fetch(API_LINK, {
           method: 'POST',
           headers: {

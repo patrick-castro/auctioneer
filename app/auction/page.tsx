@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import Auctions from './components/Auctions'
-import { useSession } from 'next-auth/react'
 import fetcher from '@/utils/fetcher'
 
 import './styles.css'
@@ -19,13 +18,12 @@ enum FilterOption {
 }
 
 const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
+const appUrl = process.env.APP_URL
 
 export default function Auction() {
   const [filter, setFilter] = useState<Filter>(FilterOption.All)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session } = useSession()
-  const token = session?.user.accessToken || ''
 
   useEffect(() => {
     const searchFilter = searchParams.get('filter')
@@ -36,7 +34,7 @@ export default function Auction() {
     }
   }, [])
 
-  const url = `http://localhost:3000/api/auction?filter=${filter}`
+  const url = `${appUrl}/api/auction?filter=${filter}`
   const { data, error, isLoading } = useSWR(url, fetcher)
 
   const handleSelectFilter = (option: Filter) => {

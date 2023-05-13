@@ -1,5 +1,7 @@
+const appUrl = process.env.APP_URL
+
 export default async function createNewDeposit(amount: string, token: string) {
-  const res = await fetch('http://localhost:3000/api/user', {
+  const res = await fetch(`${appUrl}/api/user`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

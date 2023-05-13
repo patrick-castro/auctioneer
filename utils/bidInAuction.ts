@@ -1,9 +1,11 @@
+const appUrl = process.env.APP_URL
+
 export default async function bidInAuction(
   auctionId: string,
   amount: string,
   token: string
 ) {
-  const res = await fetch(`http://localhost:3000/api/bid/${auctionId}`, {
+  const res = await fetch(`${appUrl}/api/bid/${auctionId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

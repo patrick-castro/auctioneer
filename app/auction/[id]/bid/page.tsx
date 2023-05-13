@@ -11,6 +11,8 @@ import fetcher from '@/utils/fetcher'
 import formatTimeDiff from '@/utils/formatTimeDiff'
 import accounting from 'accounting'
 
+const appUrl = process.env.APP_URL
+
 interface Params {
   params: {
     id: string
@@ -26,7 +28,7 @@ export default function NewBid({ params: { id } }: Params) {
     data: auctionData,
     error: auctionError,
     isLoading,
-  } = useSWR(`http://localhost:3000/api/auction/${id}`, fetcher)
+  } = useSWR(`${appUrl}/api/auction/${id}`, fetcher)
 
   const { name, startPrice, timeWindow } = auctionData || {}
   const duration = formatTimeDiff(timeWindow)

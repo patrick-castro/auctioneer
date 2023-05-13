@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 
+const appUrl = process.env.APP_URL
+
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -20,7 +22,7 @@ export default function Register() {
       const email = formData.get('email')
       const password = formData.get('password')
 
-      const res = await fetch('http://localhost:3000/api/user', {
+      const res = await fetch(`${appUrl}}/api/user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
