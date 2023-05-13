@@ -11,7 +11,7 @@ import fetcher from '@/utils/fetcher'
 import formatTimeDiff from '@/utils/formatTimeDiff'
 import accounting from 'accounting'
 
-const appUrl = process.env.APP_URL
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
 interface Params {
   params: {

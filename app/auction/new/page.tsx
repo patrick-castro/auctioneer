@@ -85,8 +85,10 @@ export default function NewAuction() {
         router.push('/auction')
       }, 3500) // 3.3 seconds
     } catch (error) {
+      console.log({ error })
       toast.dismiss()
       toast.error('Failed in creating auction')
+      setIsLoading(false)
     }
   }
 

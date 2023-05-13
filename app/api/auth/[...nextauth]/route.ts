@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-const appUrl = process.env.APP_URL
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
 const handler = NextAuth({
   providers: [

@@ -4,7 +4,7 @@ interface Body {
   timeWindow: string
 }
 
-const appUrl = process.env.APP_URL
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
 export default async function createNewAuction(body: Body, token: string) {
   const res = await fetch(`${appUrl}/api/auction`, {

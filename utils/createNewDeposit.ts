@@ -1,4 +1,4 @@
-const appUrl = process.env.APP_URL
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
 export default async function createNewDeposit(amount: string, token: string) {
   const res = await fetch(`${appUrl}/api/user`, {

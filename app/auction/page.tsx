@@ -18,7 +18,7 @@ enum FilterOption {
 }
 
 const ALLOWED_FILTERS = ['all', 'ongoing', 'completed']
-const appUrl = process.env.APP_URL
+const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
 export default function Auction() {
   const [filter, setFilter] = useState<Filter>(FilterOption.All)
