@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 
 export default function Register() {
+  const { status } = useSession()
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -32,6 +33,21 @@ export default function Register() {
       redirect: true,
       callbackUrl: '/auction',
     })
+  }
+
+  if (!status || status === 'loading') return
+
+  if (status === 'authenticated') {
+    return (
+      <div className='login-form'>
+        <h1 className='text-2xl font-semibold mb-5'>
+          You are already registered!
+        </h1>
+        <Link href='/auction' className='underline text-blue-600'>
+          Go back to Auctions page
+        </Link>
+      </div>
+    )
   }
 
   return (
