@@ -10,7 +10,6 @@ First, install the dependencies and libraries. You can use any package managers 
 
 npm install
 
-
 ```
 
 Then, generate the Prisma Client using the defined models and relationships in `prisma/schema.prisma`:
@@ -19,7 +18,6 @@ Then, generate the Prisma Client using the defined models and relationships in `
 
 npx prisma generate
 
-
 ```
 
 Finally, run the development server:
@@ -27,7 +25,6 @@ Finally, run the development server:
 ```
 
 npm run dev
-
 
 ```
 
@@ -41,7 +38,6 @@ First, compile the Next project by running:
 
 npm run build
 
-
 ```
 
 Then run the build:
@@ -49,7 +45,6 @@ Then run the build:
 ```
 
 npm start
-
 
 ```
 
