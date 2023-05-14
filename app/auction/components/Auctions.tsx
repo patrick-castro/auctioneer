@@ -21,17 +21,25 @@ function EmptyState() {
 export default function Auctions({ auctions, isLoading }: Props) {
   const { data: session } = useSession()
   const [memoizedAuctions, setMemoizedAuctions] = useState<Auction[]>([])
+  const [isProcessingData, setIsProcessingData] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     if (!auctions) return
 
+    if (!auctions.length) {
+      return setMemoizedAuctions([])
+    }
+
+    setIsProcessingData(() => true)
     const timer = setInterval(() => {
       const mappedAuctions = auctions.map((auction: Auction) => ({
         ...auction,
         timeWindow: formatTimeDiff(auction.timeWindow),
       }))
+
       setMemoizedAuctions(mappedAuctions)
+      setIsProcessingData(() => false)
     }, 1000)
 
     return () => {
@@ -42,7 +50,7 @@ export default function Auctions({ auctions, isLoading }: Props) {
   const userId = session?.user.id
 
   const renderRows = () => {
-    if (isLoading) {
+    if (isLoading || isProcessingData) {
       // Fill random item to make map work
       const blankArr = new Array(6).fill('a')
       return blankArr.map((item: string, idx: number) => {
@@ -111,7 +119,7 @@ export default function Auctions({ auctions, isLoading }: Props) {
         <tbody>{renderRows()}</tbody>
       </table>
 
-      {!auctions?.length && !isLoading && <EmptyState />}
+      {!auctions?.length && !isLoading && !isProcessingData && <EmptyState />}
     </section>
   )
 }
