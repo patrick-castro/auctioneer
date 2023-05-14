@@ -10,13 +10,21 @@ interface Props {
   isLoading: boolean
 }
 
+function EmptyState() {
+  return (
+    <div className='flex justify-center bg-gray-100 py-4'>
+      No results found!
+    </div>
+  )
+}
+
 export default function Auctions({ auctions, isLoading }: Props) {
   const { data: session } = useSession()
   const [memoizedAuctions, setMemoizedAuctions] = useState<Auction[]>([])
   const router = useRouter()
 
   useEffect(() => {
-    if (!auctions || !auctions.length) return
+    if (!auctions) return
 
     const timer = setInterval(() => {
       const mappedAuctions = auctions.map((auction: Auction) => ({
@@ -56,6 +64,8 @@ export default function Auctions({ auctions, isLoading }: Props) {
         )
       })
     }
+
+    if (!memoizedAuctions.length) return
 
     return memoizedAuctions.map(
       ({ id, name, startPrice, timeWindow, ownerId }: Auction, idx: number) => {
@@ -100,6 +110,8 @@ export default function Auctions({ auctions, isLoading }: Props) {
         </thead>
         <tbody>{renderRows()}</tbody>
       </table>
+
+      {!memoizedAuctions.length && <EmptyState />}
     </section>
   )
 }
