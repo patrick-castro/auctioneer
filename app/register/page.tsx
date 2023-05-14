@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
+import cn from 'classnames'
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
@@ -99,7 +100,10 @@ export default function Register() {
         {!!error && <p className='text-red-600'>{error}</p>}
 
         <button
-          className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4'
+          className={cn(
+            'btn btn-primary w-full mt-8 text-white bg-blue-500 rounded-md py-4',
+            { 'opacity-75': isLoading, 'hover:bg-blue-600': !isLoading }
+          )}
           type='submit'
           disabled={isLoading}
         >

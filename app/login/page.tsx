@@ -3,6 +3,7 @@
 import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { FormEvent, useRef, useState } from 'react'
+import cn from 'classnames'
 
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -80,7 +81,10 @@ export default function Login({ searchParams }: Props) {
         {hasError && <p className='text-red-600'>Invalid credentials</p>}
 
         <button
-          className='btn btn-primary w-full mt-8 text-white bg-blue-500 hover:bg-blue-600 rounded-md py-4'
+          className={cn(
+            'btn btn-primary w-full mt-8 text-white bg-blue-500 rounded-md py-4',
+            { 'opacity-75': isLoading, 'hover:bg-blue-600': !isLoading }
+          )}
           type='submit'
           disabled={isLoading}
         >
