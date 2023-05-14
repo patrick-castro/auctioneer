@@ -56,7 +56,7 @@ export default function Home() {
           className='image-brightness-wrapper'
         />
 
-        <div className='z-10 absolute top-80 left-20 gap-20'>
+        <div className='z-10 absolute bottom-40 2xl:bottom-56 left-24'>
           <h1 className='text-5xl font-semibold pb-2 text-white text-shadow'>
             Winning is just a bid away.
           </h1>
