@@ -111,7 +111,7 @@ export default function Auctions({ auctions, isLoading }: Props) {
         <tbody>{renderRows()}</tbody>
       </table>
 
-      {!memoizedAuctions.length && <EmptyState />}
+      {!auctions?.length && !isLoading && <EmptyState />}
     </section>
   )
 }
