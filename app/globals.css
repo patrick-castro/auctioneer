@@ -63,3 +63,7 @@ nav {
   box-sizing: border-box;
   box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
+
+.min-height-home {
+  min-height: 12rem;
+}
