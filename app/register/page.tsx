@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL
+const appUrl = process.env.APP_URL
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false)
