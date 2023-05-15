@@ -50,6 +50,39 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Architecture
+```
+├── app
+│   ├── api
+│   │   ├── auction
+│   │   │   └── [id]
+│   │   ├── auth
+│   │   │   └── [...nextauth]
+│   │   ├── bid
+│   │   │   └── [auctionId]
+│   │   ├── login
+│   │   └── user
+│   ├── auction
+│   │   ├── [id]
+│   │   ├── components
+│   │   └── new
+│   ├── deposit
+│   │   └── new
+│   ├── login
+│   └── register
+├── components
+│   ├── Dropdown
+│   ├── Navbar
+│   └── Providers 
+├── lib
+├── prisma
+├── public
+│   └── images
+├── utils
+├── middleware
+└── types
+```
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
